@@ -30,6 +30,9 @@ const recordSlise = createSlice({
       },
     ],
   },
+  reducers: {
+
+  },
   extraReducers: (builder) => {
     builder.addCase(fetchRecords.fulfilled, (state, action) => {
       state.records = [...action.payload];
@@ -38,7 +41,8 @@ const recordSlise = createSlice({
       state.records = state.records.filter((x) => x.id !== action.payload.id);
     });
     builder.addCase(fetchAddRecord.fulfilled, (state, action) => {
-      state.push(action.payload);
+      console.log(action.payload);
+      state.records.push(action.payload);
     });
   },
 });
