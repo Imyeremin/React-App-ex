@@ -1,7 +1,9 @@
 import Button from "react-bootstrap/Button";
 import { Link } from "react-router-dom";
 
+
 const MainPage = () => {
+
   return (
     <>
       <h1 className="display-3 mt-5">

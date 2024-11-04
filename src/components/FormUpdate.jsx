@@ -2,10 +2,14 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import FloatingLabel from "react-bootstrap/FloatingLabel";
 import styled from "styled-components";
+import { useDispatch, useSelector } from "react-redux";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { fetchUpdateRecord } from "../store/recordSlise";
 
-function FormUpdate({ disp }) {
+function FormUpdate({ disp, onSetDisp }) {
   const PopWindow = styled.div`
-    display: none;
+    display: ${(props) => props.disp};
     justify-content: center;
     align-items: center;
     padding: 20px;
@@ -29,58 +33,99 @@ function FormUpdate({ disp }) {
     background-color: #303030;
     border-radius: 18px;
   `;
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const records = useSelector((state) => state.records.records);
+  const record = records.find((x) => x.id === disp.id);
+// Почему можно изменить только по 1 символу?
+// Почему енльзя задать стартовые значения?
+  const [dataVal, setDataVal] = useState({
+    dateTime: "",
+    nameTel: "",
+    auto: "",
+    typeWork: "",
+    description: "",
+  });
+
+  const onEditRecord = () => {
+    const updateRecord = { ...dataVal, id: disp.id };
+    dispatch(fetchUpdateRecord(updateRecord));
+    navigate("/records");
+  };
+
+  const onDataChange = (value, key) => {
+    setDataVal({
+      ...dataVal,
+      [key]: value,
+    });
+    console.log(value);
+  };
 
   return (
-    <PopWindow>
+    <PopWindow disp={disp.dispVal}>
       <DivForm>
         <Form.Group className="mb-3 ">
           <Form.Text className="text-light">
-            <b>Введите дату и время ремонта</b>
+            <b>Измените дату и время ремонта</b>
           </Form.Text>
           <Form.Control
-            className=" bg-ligth"
+            value={dataVal.dateTime}
+            className="text-light bg-dark"
             type="text"
             placeholder="Дата\Время"
+            onChange={(e) => onDataChange(e.target.value, "dateTime")}
           />
           <Form.Text className="text-light">
-            <b>Введите Имя и телефон для связи</b>
+            <b>Измените Имя и телефон для связи</b>
           </Form.Text>
           <Form.Control
-            className=" bg-ligth"
+            value={dataVal.nameTel}
+            className="text-light bg-dark"
             type="text"
             placeholder="Имя\Телефон"
+            onChange={(e) => onDataChange(e.target.value, "nameTel")}
           />
           <Form.Text className="text-light">
-            <b>Модель авто </b>
+            <b>Измените модель авто </b>
           </Form.Text>
           <Form.Control
-            className=" bg-ligth"
+            value={dataVal.auto}
+            className="text-light bg-dark"
             type="text"
             placeholder="Марка авто"
+            onChange={(e) => onDataChange(e.target.value, "auto")}
           />
 
-          <Form.Text className=" bg-ligth">
-            <b>Вид необходимых работ</b>
+          <Form.Text className="text-light bg-dark">
+            <b>Измените вид работ</b>
           </Form.Text>
-          <Form.Select placeholder="Htvjyn" aria-label="Default select example">
+          <Form.Select
+            value={dataVal.typeWork}
+            onChange={(e) => onDataChange(e.target.value, "typeWork")}
+            placeholder="Htvjyn"
+            aria-label="Default select example"
+          >
             <option> &#128736; Вид работ:</option>
-            <option value="1">ТО</option>
-            <option value="2">Диагностика</option>
-            <option value="3">Ремонт</option>
+            <option value="ТО">ТО</option>
+            <option value="Диагностика">Диагностика</option>
+            <option value="Ремонт">Ремонт</option>
           </Form.Select>
 
           <>
-            <FloatingLabel controlId="floatingTextarea2" label="Детали ремонта">
+            <FloatingLabel controlId="floatingTextarea2" label="Добавьте детали ремонта">
               <Form.Control
-                className=" bg-ligth"
+                value={dataVal.description}
+                className="text-light bg-dark"
                 as="textarea"
                 placeholder="Leave a comment here"
                 style={{ height: "100px" }}
+                onChange={(e) => onDataChange(e.target.value, "description")}
               />
             </FloatingLabel>
           </>
         </Form.Group>
         <Button
+          onClick={onEditRecord}
           className="btn me-2 bg-dark btn-success"
           variant=" primary"
           type="submit"
@@ -91,6 +136,7 @@ function FormUpdate({ disp }) {
           className="btn  bg-dark btn-primary"
           variant=" primary"
           type="submit"
+          onClick={onSetDisp}
         >
           Отменить
         </Button>

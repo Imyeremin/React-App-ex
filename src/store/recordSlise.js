@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { deleteRecord, getRecords, addRecord } from "../api";
+import { deleteRecord, getRecords, addRecord, updateRecord } from "../api";
 
 const fetchRecords = createAsyncThunk("api/getRecords", async () => {
   return getRecords();
@@ -9,6 +9,12 @@ const fethDeleteRecord = createAsyncThunk(
   "api/deleteRecord",
   async (recordId) => {
     return deleteRecord(recordId);
+  }
+);
+const fetchUpdateRecord = createAsyncThunk(
+  "api/updateBook",
+  async (book, thunkApi) => {
+     return updateRecord(book.id, book);
   }
 );
 
@@ -21,7 +27,7 @@ const recordSlise = createSlice({
   initialState: {
     records: [
       {
-        id: 0,
+        id: "1",
         dateTime: "20.12.2024 13:30",
         nameTel: "Илья 89105027873",
         auto: "Toyota Camry 2013",
@@ -30,9 +36,7 @@ const recordSlise = createSlice({
       },
     ],
   },
-  reducers: {
-
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder.addCase(fetchRecords.fulfilled, (state, action) => {
       state.records = [...action.payload];
@@ -44,9 +48,13 @@ const recordSlise = createSlice({
       console.log(action.payload);
       state.records.push(action.payload);
     });
+    builder.addCase(fetchUpdateRecord.fulfilled, (state, action) => {
+      const idx = state.records.findIndex((x) => x.id === action.payload.id);
+      state.records[idx] = { ...action.payload };
+    });
   },
 });
 
-export { fetchRecords, fethDeleteRecord, fetchAddRecord };
+export { fetchRecords, fethDeleteRecord, fetchAddRecord, fetchUpdateRecord };
 
 export default recordSlise.reducer;

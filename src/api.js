@@ -16,7 +16,11 @@ const addRecord = async (record) =>{
   const resp = await axios.post(apiUrl, record)
   return resp.data
 }
+const updateRecord = async (id, book) => {
+  const resp = await axios.put(apiUrl + "/" + id, book);
+  return resp.data;
+};
 
 
 
-export { getRecords, addRecord, deleteRecord };
+export { getRecords, addRecord, deleteRecord, updateRecord };

@@ -74,9 +74,9 @@ function NewRecord() {
           aria-label="Default select example"
         >
           <option> &#128736; Вид работ:</option>
-          <option value="1">ТО</option>
-          <option value="2">Диагностика</option>
-          <option value="3">Ремонт</option>
+          <option value="ТО">ТО</option>
+          <option value="Диагностика">Диагностика</option>
+          <option value="Ремонт">Ремонт</option>
         </Form.Select>
 
         <>

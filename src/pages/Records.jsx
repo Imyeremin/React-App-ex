@@ -1,7 +1,6 @@
 import { useState } from "react";
 import Accordion from "react-bootstrap/Accordion";
 import Button from "react-bootstrap/Button";
-import styled from "styled-components";
 
 import { useEffect } from "react";
 import { fetchRecords, fethDeleteRecord } from "../store/recordSlise";
@@ -11,7 +10,10 @@ import FormUpdate from "../components/FormUpdate";
 const Records = () => {
   const records = useSelector((state) => state.records.records);
   const dispatch = useDispatch();
-
+  const [disp, setDisp] = useState({
+    dispVal: "none",
+    id: "1",
+  });
 
   useEffect(() => {
     dispatch(fetchRecords());
@@ -22,12 +24,26 @@ const Records = () => {
   };
 
   const onOpen = (id) => {
-    console.log(id);
+    if (disp.dispVal === "none") {
+      setDisp({
+        dispVal: "flex",
+        id: id,
+      });
+      console.log(id + " flex");
+    } else {
+      setDisp({
+        dispVal: "none",
+        id: "1",
+      });
+      console.log(id + " none");
+    }
   };
+
+  
 
   return (
     <>
-      <FormUpdate />
+      <FormUpdate disp={disp} onSetDisp={onOpen}  />
       <div
         style={{
           overflowX: "scroll",
@@ -67,7 +83,7 @@ const Records = () => {
                   </Accordion>
                 </td>
                 <Button
-            
+                  onClick={() => onOpen(rec.id)}
                   className="m-2"
                   variant="primary"
                 >
