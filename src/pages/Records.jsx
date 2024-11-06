@@ -43,7 +43,7 @@ const Records = () => {
 
   return (
     <>
-      <FormUpdate disp={disp} onSetDisp={onOpen}  />
+      <FormUpdate disp={disp} onSetDisp={onOpen}   />
       <div
         style={{
           overflowX: "scroll",

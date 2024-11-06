@@ -3,42 +3,45 @@ import Form from "react-bootstrap/Form";
 import FloatingLabel from "react-bootstrap/FloatingLabel";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { fetchUpdateRecord } from "../store/recordSlise";
 
-function FormUpdate({ disp, onSetDisp }) {
-  const PopWindow = styled.div`
-    display: ${(props) => props.disp};
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-    border-radius: 18px;
-    background-color: rgba(0, 0, 0, 0.5);
-    height: 100%;
-    width: 100%;
-    position: absolute;
-    margin-left: auto;
-    margin-right: auto;
-    left: 0;
-    top: 0;
-    text-align: center;
-    z-index: 1;
-  `;
+const PopWindow = styled.div`
+  display: ${(props) => props.disp};
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  border-radius: 18px;
+  background-color: rgba(0, 0, 0, 0.5);
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  margin-left: auto;
+  margin-right: auto;
+  left: 0;
+  top: 0;
+  text-align: center;
+  z-index: 1;
+`;
 
-  const DivForm = styled.div`
-    width: 500px;
-    height: 500px;
-    padding: 20px;
-    background-color: #303030;
-    border-radius: 18px;
-  `;
+const DivForm = styled.div`
+  width: 500px;
+  height: 500px;
+  padding: 20px;
+  background-color: #303030;
+  border-radius: 18px;
+`;
+
+function FormUpdate({ disp, onSetDisp }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const records = useSelector((state) => state.records.records);
   const record = records.find((x) => x.id === disp.id);
-// Почему можно изменить только по 1 символу?
-// Почему енльзя задать стартовые значения?
+
+  // Почему можно изменить только по 1 символу?
+  // Почему енльзя задать стартовые значения?
+
   const [dataVal, setDataVal] = useState({
     dateTime: "",
     nameTel: "",
@@ -58,8 +61,21 @@ function FormUpdate({ disp, onSetDisp }) {
       ...dataVal,
       [key]: value,
     });
-    console.log(value);
   };
+  
+  const onDataClick = () => {
+    setDataVal({
+      dateTime: record.dateTime,
+      nameTel: record.nameTel,
+      auto: record.auto,
+      typeWork: record.typeWork,
+      description: record.discription,
+    });
+  };
+
+  useEffect(() => {
+    onDataClick()
+  },[record])
 
   return (
     <PopWindow disp={disp.dispVal}>
@@ -112,7 +128,10 @@ function FormUpdate({ disp, onSetDisp }) {
           </Form.Select>
 
           <>
-            <FloatingLabel controlId="floatingTextarea2" label="Добавьте детали ремонта">
+            <FloatingLabel
+              controlId="floatingTextarea2"
+              label="Добавьте детали ремонта"
+            >
               <Form.Control
                 value={dataVal.description}
                 className="text-light bg-dark"
